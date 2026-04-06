@@ -7,7 +7,7 @@ class Medico(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     nome = Column(String(100), nullable=False)
-    consulta = relationship("Consulta", back_populates= "medicos")
+    consulta = relationship("Consulta", back_populates= "medico")
 
     def __repr__(self):
         return f" Medico: \n - Numero do medico: {self.id} \n Nome: {self.nome} "
@@ -17,8 +17,8 @@ class Consulta(Base):
     __tablename__ = "consultas"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    horario = Column(Time, nullable=False)
-    data = Column(Date, nullable=False)
+    horario = Column(String, nullable=False)
+    data = Column(String, nullable=False)
     tipo = Column(String, nullable=False)
 
     medico_id = Column (Integer, ForeignKey("medicos.id"))
@@ -45,21 +45,42 @@ def cadrastar_medicos():
             session.rollback()
             print(f"Ocorreu um erro {erro}")
 
-
 def criar_consulta():
     tipo_consulta = input("Digite o tipo da consulta: ").strip().capitalize()
     horario_consulta = input("Qual o horario deseja marcar: ")
     data_consulta = input("Qual a data deseja marcar: ")
+    medico_consulta = input("Qual ID do medico: ")
 
     with Session() as session:
         try:
-            consultas = Consulta(tipo=tipo_consulta)
-            horarios = Consulta( horario=horario_consulta)
-            data = Consulta(data=data_consulta)
-            session.add(Consulta)
+            consultas = Consulta(tipo=tipo_consulta, horario=horario_consulta, data=data_consulta, medico_id=medico_consulta)
+            session.add(consultas)
             session.commit()
             print(f"Consulta cadrastado com sucesso")
         except Exception as erro:
             session.rollback()
             print(f"Ocorreu um erro {erro}")
 
+def atualizar():
+    with Session() as session:
+        try:
+            id_consulta = input("Digite o Id da consulta: ")
+            novo_horario = input("Qual o novo horario da consulta: ")
+            nova_data = input(f"Qual a nova data da consulta: ")
+            novo_tipo = Float(input("Digite o novo tipo da consulta: ")).strip().capitalize()
+
+            funcionario = session.query(Medico).filter_by(nome=).first()
+            departamento = session.query(Consulta).filter_by(nome=id_consulta).first()
+
+            #Atualizar o funcionario
+            funcionario.cargo = novo_cargo
+            funcionario.salario = novo_salario
+            funcionario.departamento = departamento
+            #salvar banco
+            session.commit()
+            print("Funcionario atualizada com sucesso/n")
+            listar_departamentos()
+
+        except Exception as erro:
+            session.rollback()
+            print(f"Ocorreu um erro {erro}")
