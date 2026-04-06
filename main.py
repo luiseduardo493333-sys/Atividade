@@ -31,3 +31,18 @@ class Consulta(Base):
 engine = create_engine("sqlite:///consultorio.db")
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
+
+def cadrastar_medicos():
+    nome_medicos = input("Digite o nome do médico: ").strip().capitalize()
+
+    with Session() as session:
+        try:
+            medico = Medico(nome=nome_medicos)
+            session.add(medico)
+            session.commit()
+            print(f"{nome_medicos} cadrastado com sucesso")
+        except Exception as erro:
+            session.rollback()
+            print(f"Ocorreu um erro {erro}")
+
+
