@@ -46,3 +46,4 @@ def cadrastar_medicos():
             print(f"Ocorreu um erro {erro}")
 
 
+
