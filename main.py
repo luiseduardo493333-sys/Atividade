@@ -60,27 +60,29 @@ def criar_consulta():
         except Exception as erro:
             session.rollback()
             print(f"Ocorreu um erro {erro}")
+def atualizar_consulta():
+    try:
+        id_consulta = int(input("Digite o Id da consulta: ").strip())
+    except ValueError:
+        print("ID inválido")
+        novo_horario = input("Qual o novo horario da consulta (enter para manter): ").strip()
+        nova_data = input("Qual a nova data da consulta (enter para manter): ").strip()
+        novo_tipo = input("Digite o novo tipo da consulta (enter para manter): ").strip()
 
-def atualizar():
-    with Session() as session:
-        try:
-            id_consulta = input("Digite o Id da consulta: ")
-            novo_horario = input("Qual o novo horario da consulta: ")
-            nova_data = input(f"Qual a nova data da consulta: ")
-            novo_tipo = Float(input("Digite o novo tipo da consulta: ")).strip().capitalize()
-
-            funcionario = session.query(Medico).filter_by(nome=).first()
-            departamento = session.query(Consulta).filter_by(nome=id_consulta).first()
-
-            #Atualizar o funcionario
-            funcionario.cargo = novo_cargo
-            funcionario.salario = novo_salario
-            funcionario.departamento = departamento
-            #salvar banco
-            session.commit()
-            print("Funcionario atualizada com sucesso/n")
-            listar_departamentos()
-
-        except Exception as erro:
-            session.rollback()
-            print(f"Ocorreu um erro {erro}")
+        with Session() as session:
+            try:
+                consulta = session.query(Consulta).filter_by(id=id_consulta).first()
+                if not consulta:
+                    print("Consulta não encontrada")
+                if novo_horario:
+                    consulta.horario = novo_horario
+                if nova_data:
+                    consulta.data = nova_data
+                if novo_tipo:
+                    consulta.tipo = novo_tipo.capitalize()
+                session.commit()
+                print("Consulta atualizada com sucesso")
+            except Exception as erro:
+                session.rollback()
+                print(f"Ocorreu um erro: {erro}")
+atualizar_consulta()
